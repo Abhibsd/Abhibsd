@@ -1,4 +1,4 @@
-- 👋 Hi, I’m @Abhibsd
+- 👋 Hi, I’m Abhishek Bhardwaj having 20 years experience as Executive Assistant to top management.
 - 👀 I’m interested in working as data analyst.
 - 🌱 I’m currently learning data analysis with Google Professional Data Analyst Course.
 - 💞️ I’m looking to collaborate on some junior entry level projects for data analyst.
