@@ -1,0 +1,620 @@
+---
+title: "Bellabeat Case Study"
+author: "Abhishek Bhardwaj"
+date: "1/29/2022"
+output: html_document
+---
+## Introduction:
+Hi, I am Abhishek Bhardwaj, working as an Executive Assistant to Vice President in a manufacturing company in India. I am having 21 years experience in Executive Assistance field. I Warmly welcome to this case study where I am going to do some real world tasks to answer some key questions to help making marketing strategy for Bellabeat by analyzing open source FitBit Fitness Tracker smart device data through a systematic process of : Ask, Prepare, Process, Analyze, Share and Act.
+
+## Brief Derscription About Bellabeat Company: 
+Bellabeat is a newly fast growing company in health focused fitness products and services for women especially.<br/>
+**Established in:** Bellabeat, founded in **2013** by Sandro Mur and Urška Sršen<br/>
+**Key Management:** **Urška Sršen** -(Bellabeat’s cofounder and Chief Creative Officer)<br/>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;**Sando Mur** -(Mathematician and Bellabeat’s cofounder; key member of the Bellabeat executive team)<br/>
+**Products:** They manufactures and provide high-tech and smart gadgets:<br/>
+    1. **Bellabeat app:** The Bellabeat app provides users with health data related to their activity, sleep, stress, menstrual cycle, and mindfulness habits. This data can help users better understand their current habits and make healthy decisions. The Bellabeat app connects to their line of smart wellness products.<br/>
+    2. **Ivy:** An elegant bracelet that monitors heart rate, respiratory rate, and cardiac coherence, and physical and mental activities.<br/>
+    3. **Leaf:** A classic wellness tracker can be worn as a bracelet, necklace, or clip.<br/>
+    4. **Yoga Mat:** To provide support, stability, and cushioning, Made out of polymer environmental resin, Biodegradable Recyclable, A hypoallergenic, toxic-free formula,carefully designed anti-slip texture helps you maintain your grip.<br/>
+    5. **Spring:** A water bottle that tracks daily water intake using smart technology to ensure that you are appropriately hydrated throughout the day.<br/>
+    6. **Time:**  This wellness watch combines the timeless look of a classic timepiece with smart technology to track user activity, sleep, and stress.<br/>  
+    Bellabeat app connects to their line of smart wellness devices and provide useful insights regarding daily activities of user to empower them to unlock their full potential and helps them to understand how their bodies work and make healthier choice. Bellabeat also provide personal wellness assistant Bellabeat Coach and publish various journals to guide workouts, nutrition, mindfulness techniques, and menstrual cycle support, and to achieve goals of user. Bellabeat's mission is to **Empowers women to reconnect with themselves, unleash their inner strengths and be what they were meant to be....**<br/>
+Bellabeat has also opened their branch office around the world and its products are available through various online e-commerce channels and their website. They have heavily invested in advertisements especially in digital marketing and also engage their consumers on social media regularly by conducting campaigns.
+
+## Ask :
+(In this phase, will understand the main reason or need of this analysis) <br/>
+
+#### Business Task:
+Find out the useful & meaningful insights and provide high-level recommendation by analyzing Non-Bellabeat smart devices and compare them with Bellabeat device. These insights will provide important information how consumers are using fitness device which will help Bellabeat management to plan their marketing strategy to unlock new growth opportunities for the company.
+
+#### Key Stakeholders:
+
+* **Urška Sršen**: Bellabeat’s cofounder and Chief Creative Officer.
+* **Sando Mur**: Mathematician and Bellabeat’s cofounder; key member of the Bellabeat executive team.
+* **Bellabeat Marketing Analytics Team**: A team of data analysts responsible for collecting, analyzing, and reporting data that helps guide Bellabeat’s marketing strategy.
+
+#### Key Points to Identify:
+As a junior analyst, my task is to identify some trends and patterns from data of smart device usage and how could these trends and patterns apply to the Bellabeat devices along with recommendations based on finding from data analysis to help Bellabeat to make future marketing strategic decisions. Steps to accomplish this:   
+
+* Explore the data provided to get relationships, trends and patterns.
+* Examine the behavior of user during use of device to find out some useful trends & patterns.
+* Applying the findings on Bellabeat devices to provide some high level recommendations to improve their marketing strategies and making their app & device functionality better. 
+
+## Prepare<br/>
+(Here I will check the authenticity, credibilty and integrity of data and also select the appropriate tool to analyze the data)
+
+#### Data Credibility Analysis:
+1. **Data Provenance/Store/Period**: Authenticity of data is low as the dataset is publicly available data under CCO license collected by Amazon Mechanical Turk between 03.12.2016–05.12.2016 from the Fitbit Fitness Tracker Data users made and available by Mobius stored on Kaggle. **link to download the dataset** (https://www.kaggle.com/arashnic/fitbit)
+
+2. **Originality**: Data originality is low as it is collected by third party Amazon Mechanical Turk.
+3. **Data Age**: Although Data is more than 5 Years old 'between 03.12.2016–05.12.2016' but it is ok for this analysis as human's living habits does not change over few years.
+4. **Comprehensiveness**: Data set is good enough and well segmented in several tables with different aspects and lots of details about the user behavior. The data set is having various daily activity, daily calories, daily intensities, daily steps, heartrate by seconds, minute METs, daily sleep, and weight log information. The data set in total 18 .csv files and data is organized in long format.
+5. **Limitation of Data**: Analysis on this data set is limited as some major key characteristics are missing such as Gender, Age, Location etc.
+
+#### Tool for analysis:
+Here, for analysis of this data set I will use RStudio as it is having lots of packages and functionality as well data visualization features to perform analysis on fast pace and accurately with stunning visualizations.
+
+#### Preparing Environment:
+##### Installing Required Packages:
+Note: Loading packeges.......
+```{r loading packages, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+library(tidyverse)
+library(here)
+library(lubridate)
+library(reshape2)
+library(scales)
+library(plotrix)
+library(cowplot)
+library(patchwork)
+library(ggrepel)
+
+```
+##### Importing data sets to explore.......
+Note: After checking the datasets in excel, I found that 'dailyCalories_merged.csv', 'dailyIntensities_merged.csv' and 'dailyCalaries_merged.csv' are already merged with 'dailyActivity_merged.csv'file with having same numbers of paticipants(33) and same numbers of observations(940). So, I decided to use only dailyActivity_merged.csv,  sleepDay_merged.csv, heartrate_seconds_merged.csv and weightLogInfo_merged.csv to explore in this analysis...
+
+```{r Importing Daily Activity, , echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+daily_activity <- read_csv(here("../input/bellabeat-dataset/dailyActivity_merged.csv"))
+heart_rate <- read_csv(here("../input/bellabeat-dataset/heartrate_seconds_merged.csv"))
+sleep_day <- read_csv(here("../input/bellabeat-dataset/sleepDay_merged.csv"))
+weight_log <- read_csv(here("../input/bellabeat-dataset/weightLogInfo_merged.csv"))
+
+```
+
+
+##### Exploring daily_activity dataset.........
+
+```{r Exploring dailyactivity,  , echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+dim(daily_activity) # For checking variables and observations....
+names(daily_activity) # To show the variable names....
+glimpse(daily_activity) # To see the properties of dataset in brief....
+str(daily_activity) # To see the structure of dataset.....
+dupl_daily_act <- daily_activity[duplicated(daily_activity),] # To find out the duplicate observations in dataset....
+head(dupl_daily_act)
+sum(is.na(daily_activity)) # To find out the number of null values in dataset....
+Unique <- n_distinct(daily_activity$Id) # Checking unique participants...
+Unique
+```
+
+##### Exploring heart_rate dataset.........
+
+```{r Exploring heartrate,  , echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+dim(heart_rate) # For checking variables and observations....
+names(heart_rate) # To show the variable names....
+glimpse(heart_rate) # To see the properties of dataset in brief....
+str(heart_rate) # To see the structure of dataset.....
+dup_heart <- heart_rate[duplicated(heart_rate),] # To find out the duplicate observations in dataset....
+head(dup_heart)
+sum(is.na(heart_rate)) # To find out the number of null values in dataset....
+Unique <- n_distinct(heart_rate$Id) # Checking unique participants...
+Unique
+```
+
+##### Exploring sleep_day dataset.........
+
+```{r Exploring sleepday,  , echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+dim(sleep_day) # For checking variables and observations....
+names(sleep_day) # To show the variable names....
+glimpse(sleep_day) # To see the properties of dataset in brief....
+str(sleep_day) # To see the structure of dataset.....
+dup_sleep_day <- sleep_day[duplicated(sleep_day),] # To find out the duplicate observations in dataset....
+head(dup_sleep_day)
+sum(is.na(sleep_day)) # To find out the number of null values in dataset....
+Unique <- n_distinct(sleep_day$Id) # Checking unique participants...
+Unique
+```
+
+##### Exploring weight_log dataset.........
+```{r weightlog,  , echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+dim(weight_log) # For checking variables and observations....
+names(weight_log) # To show the variable names....
+glimpse(weight_log) # To see the properties of dataset in brief....
+str(weight_log) # To see the structure of dataset.....
+dupl_weight_log <- weight_log[duplicated(weight_log),] # To find out the duplicate observations in dataset....
+head(dupl_weight_log)
+sum(is.na(weight_log)) # To find out the number of null values in dataset....
+Unique <- n_distinct(weight_log$Id) # Checking unique participants...
+Unique
+```
+
+
+## Process:
+In this process I will clean, organize and arrange the data for smooth and accurate analysis.
+
+#### Findings............
+Below are my findings.........<br/>
+
+1. Found that all datasets have different number of participants as follow:
+- 'daily_activity' dataset - 33
+- 'heart_rate' dataset - 14
+- 'sleep_day' dataset - 24
+- 'weight_log' dataset - 8
+  
+As per above findings, 'heart_rate' and 'weight_log' datasets are having very less numbers of participant 14 and 8 respectively. With these datasets, analysis may be biased and produce wrong recommendations and conclusions. Therefore, I will not use these datasets further in analysis.
+
+2. In datasets no duplicate, null values and spelling errors found, but date field found in 'Character' format in all datasets so, I changed it to 'Date' format.
+
+```{r Converting Character to Date Format,  , echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE }
+class(daily_activity$ActivityDate)
+colnames(daily_activity)[which(names(daily_activity) == "ActivityDate")] <- "Date"
+daily_activity$Date <- as.POSIXct(daily_activity$Date, format="%m/%d/%y", tz=Sys.timezone())
+daily_activity$Date <- format(daily_activity$Date, format = "%m/%d/%y")
+daily_activity$Date <- as.Date(daily_activity$Date, format="%m/%d/%y")
+class(daily_activity$Date)
+
+class(sleep_day$SleepDay)
+colnames(sleep_day)[which(names(sleep_day) == "SleepDay")] <- "Date"
+sleep_day$Date=as.POSIXct(sleep_day$Date, format="%m/%d/%Y %I:%M:%S %p", tz=Sys.timezone())
+sleep_day$Date <- format(sleep_day$Date, format="%m/%d/%y")
+sleep_day$Date <- as.Date(sleep_day$Date, format="%m/%d/%y")
+class(sleep_day$Date)
+
+```
+
+3. Found 3 duplicate observations in sleep_day dataset and removed....
+
+```{r Removing Duplicate Entries,  , echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+sleep_day <- distinct(sleep_day)
+```
+
+
+
+#### Lets more dig down the datasets and try to find some key stats by using 'summary()' function but before summarizing I would like to add a variable "sleep latency" in sleep_day dataset..........
+
+
+Here, First I calculated the sleep latency i.e. difference of total time in bed and total time asleep, *Sleep latency, is the time it takes a person to fall asleep after turning the lights out.*
+
+
+```{r Sleep Latency,  , echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+# Calculating Sleep Latency i.e. difference of total time in bed and total time asleep.
+sleep_day <- sleep_day %>% 
+  mutate(sleep_latency = TotalTimeInBed - TotalMinutesAsleep)
+
+```
+
+
+
+```{r Key statistics,  , echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+summary(daily_activity)
+
+summary(sleep_day)
+
+```
+
+## Analysis
+
+Facts found after getting through the key stats of datasets are....<br/>
+
+a. Average (mean) of steps is only 7638, which quite ok for somewhat workout but not upto CDC recommendation of 10000 steps per day. 
+
+b. Average (mean) of Very active time is 21.16 minutes i.e. 148.12 minutes per week, which is very good as compared to CDC recommendation of 75 minutes very active workout but average fair active minutes are only 13.56 minutes i.e 94.92 minutes per week which very low against CDC recommendation of 150 minutes per week for average workout.
+
+c. It is also observed that average of sedentary minutes 991.2 i.e 16.52 Hours per day, which is very high and should not be more than 8 Hour per day as recommended.
+
+d. Average of very active distance is 1.503 which is very less as if we assume 10,000 steps translates to roughly 5 miles or 8 Kms approx.
+
+e. It observed that average calories burned by participants is 2304. Number of calories should burn in a day depends on diet, personal health and fitness goals, as well as other factors like age, sex, height, weight, and activity levels. So, if your goal is to loose weight than one should burn 3500 calories to loose one pound of weight.
+
+f. Average of TotalMinutesAsleep is 419.20 minutes i.e. 7 Hours approx, which is quite good as per recommendations of CDC.
+
+g. Average minutes of sleep latency is 39.31 minutes which is quite more than normal as per study 15 to 20 minutes but it depends person to person and should not be more than 1 Hour.
+
+
+### I have made some hypothesis for analysis which are as follows...
+
+1. There is relation between activity category and calories burnt.
+
+2. There is relation between activity level time and calories burnt.
+
+3. There is a relation between distance covered and calories burnt.
+
+4. There is a relation between steps and calories burnt.
+
+5. There is a relation between activity type and sleep quality.
+
+6. There is a relation between sleep latency and sleep quality.
+
+
+## Share
+
+As per my analysis, I found that average of sedentary minutes (991.2 i.e 16.52 Hours per day) is very high.
+
+So, to find out the distribution of sedentary minutes, I create a data frame to categories "Risk for Sitting Disease" using the following assigned values for the different thresholds:
+
+•	LOW risk indicates sitting less than 4 hours per day.
+
+•	MEDIUM risk indicates sitting 4 to 8 hours per day.
+
+•	HIGH risk indicates sitting 8 to 11 hours per day.
+
+•	VERY HIGH risk indicates sitting more than 11 hours per day.
+
+
+##### NOTE: This calculator determines "Risk for Sitting Disease" using thresholds defined by research published in Arch Intern Med. 2012;172(6).
+
+```{r Categories of sedentary risks,  , echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+#Creating data frame to categories sedentary risks...
+Activity <- daily_activity %>% 
+     summarise(Id, Calories,TotalSteps,
+    sedentary_risk = factor(case_when(SedentaryMinutes<240 ~ "Low Risk",  
+                                      SedentaryMinutes>=240 & SedentaryMinutes<480 ~ "Medium Risk",
+                                      SedentaryMinutes>=480 & SedentaryMinutes<660 ~ "High Risk",
+                                      SedentaryMinutes>=660 ~ "Very High Risk"), 
+                            levels = c("Low Risk", "Medium Risk", "High Risk", "Very High Risk")),
+    Sedentary = case_when(SedentaryMinutes>=480 ~ "Sedentary"),
+    Moderate = case_when(FairlyActiveMinutes>=30 ~ "Moderate"),
+    Vigorous = case_when(VeryActiveMinutes>=20 ~ "Vigorous"),
+    Contrary = factor(case_when(Sedentary == "Sedentary" & Moderate == "Moderate" & Vigorous == "Vigorous" ~ "S+M+V",
+                                Sedentary == "Sedentary" & Vigorous == "Vigorous" ~ "S+V",
+                                Sedentary == "Sedentary" & Moderate == "Moderate" ~ "S+M"),
+           levels = c("S+M+V", "S+V", "S+M")))
+
+```
+
+
+#### I plot this data frame into two charts.....
+```{r Sedentary Risk Level Wise Distribution of Users,  , echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+# Getting count of Sedentary Risks.....
+sd <- Activity %>% 
+  count(sedentary_risk)
+
+#Plotting column chart of Sedentary Risk Level Wise Distribution of Users...
+p1 <- sd %>% 
+  ggplot(aes(x=sedentary_risk, y = n, fill = -n))+
+  geom_col()+
+  coord_flip()+
+  geom_text_repel(aes(label = round(n,2)), stat = "identity", 
+                  position = "stack", hjust = 0.5, vjust = 0.5, color = "red", size = 5)+
+  labs(x = "Sedentary Risks Levels", y = "Count of Users", 
+       title = "Sedentary Risk Level Wise Distribution of Users")+
+  theme_classic()
+  
+
+# Plotting contrary activities of user vs sedentary  risk level 
+
+count_act <- Activity %>% 
+  drop_na(Contrary) %>% 
+  count(sedentary_risk,Contrary)
+
+p2 <- count_act %>% 
+  ggplot(aes(x=reorder(sedentary_risk,-n), n, fill = Contrary))+
+  geom_col()+
+  geom_text_repel(aes(label = round(n,2)), stat = "identity", 
+                  position = "stack", vjust = 0.2)+
+  labs(x = "Sedentary Risks Levels", y = "Count of Users", 
+       title = "Contrary Activity of User's Vs Sedentary Risks Level", 
+       caption = "'S+M+V' = Users who are Sedentary as well as Vigorous and Moderate Active\n
+       'S+V' = Users who are Sedentary as well as Vigorous Active\n
+       'S+M' = Users who are Sedentary as well as Moderate Active")+
+  theme_classic()
+
+#Plotting both charts side by side.....
+p1 / p2
+```
+
+
+1. As per above charts it is clearly shown that more than 86% users are on Very High Risk category can lead to health issues.
+
+2. It is also observed that very high numbers of users who are very highly active are also in sedentary category of Very High Risk. As per CDC recommendations, 20 minutes vigorous activity or 30 minutes moderate activity is good stay healthy but despite of being vigorous active if person stays sedentary for more that 11 hours, it may cause serious health issues.
+
+### Relationship between activity level time and calories burnt.
+
+```{r Activity level time and calories burnt,  , echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+# Plotting relationship between activity level time and calories burnt....
+
+M1 <- daily_activity %>% 
+  ggplot(aes(VeryActiveMinutes, Calories))+
+  geom_point(color = "green")+
+  geom_smooth(method = lm, se = F, color = "red")+
+  labs(title = "Very Active Minutes Vs Calories Burnt")+
+  theme_classic()
+
+M2 <- daily_activity %>% 
+  ggplot(aes(FairlyActiveMinutes, Calories))+
+  geom_point(color = "blue")+
+  geom_smooth(method = lm, se = F, color = "red")+
+  labs(title = "Fair Active Minutes Vs Calories Burnt")+
+  theme_classic()
+
+M3 <- daily_activity %>% 
+  ggplot(aes(LightlyActiveMinutes, Calories))+
+  geom_point(color = "yellow")+
+  geom_smooth(method = lm, se = F, color = "red")+
+  labs(title = "Light Active Minutes Vs Calories Burnt")+
+  theme_classic()
+
+M4 <- daily_activity %>% 
+  ggplot(aes(SedentaryMinutes, Calories))+
+  geom_point(color = "red")+
+  geom_smooth(method = lm, se = F, color = "blue")+
+  labs(title = "Sedentary Minutes Vs Calories Burnt")+
+  theme_classic()
+
+(M1 + M2) / (M3 + M4)
+```
+
+The above graph clearly shows positive relation between activity category , activity time and calories burnt, the more intense an activity, with longer time, more calories it burns.
+
+
+### Relationship between activity distance covered and calories burnt.
+```{r Distance Vs calories burnt,  , echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+# Plotting relationship between activity distance and calories burnt....
+
+D1 <- daily_activity %>% 
+  ggplot(aes(VeryActiveDistance, Calories))+
+  geom_point(color = "green")+
+  geom_smooth(method = lm, se = F, color = "red")+
+  labs(title = "Very Active Distance Vs Calories Burnt")+
+  theme_classic()
+
+D2 <- daily_activity %>% 
+  ggplot(aes(ModeratelyActiveDistance, Calories))+
+  geom_point(color = "blue")+
+  geom_smooth(method = lm, se = F, color = "red")+
+  labs(title = "Moderate Active Distance Vs Calories Burnt")+
+  theme_classic()
+
+D3 <- daily_activity %>% 
+  ggplot(aes(LightActiveDistance, Calories))+
+  geom_point(color = "yellow")+
+  geom_smooth(method = lm, se = F, color = "red")+
+  labs(title = "Light Active Distance Vs Calories Burnt")+
+  theme_classic()
+
+D4 <- daily_activity %>% 
+  ggplot(aes(SedentaryActiveDistance, Calories))+
+  geom_point(color = "red")+
+  geom_smooth(method = lm, se = F, color = "blue")+
+  labs(title = "Sedentary Active Distance Vs Calories Burnt")+
+  theme_classic()
+
+#Combining Charts on same canvas....
+(D1 + D2) / (D3 + D4)
+```
+
+The above graph clearly shows positive relation between activity distance and calories burnt, the more distance with more intense activity, burns more calories.
+
+### Relationship between Steps Vs Distance covered and Calories burnt.
+
+```{r Steps & Distance Vs Calories Burnt,  , echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+#Examining Total Distance Vs Total Steps Vs Calories Burnt......
+Steps_Distance <- daily_activity %>% 
+  summarise(Id, Calories,TotalSteps,
+            steps_catg = factor(case_when(TotalSteps<5000 ~ "V.H.Risk(<5K)",  
+                                          TotalSteps>=5000 & TotalSteps<8000 ~ "H.Risk(>=5K-<8K)",
+                                          TotalSteps>=8000 & TotalSteps<10000 ~ "M.Risk(>=8K-<10K)",
+                                          TotalSteps>=10000 & TotalSteps<15000 ~ "L.Risk(>=10K-<15K)",
+                                          TotalSteps>=15000 ~ "V.L.Risk(>=15K)"), 
+                                levels = c("V.H.Risk(<5K)", "H.Risk(>=5K-<8K)", "M.Risk(>=8K-<10K)", 
+                                               "L.Risk(>=10K-<15K)", "V.L.Risk(>=15K)")),
+            distance_catg =factor(case_when(TotalDistance<4 ~ "<4 Km",  
+                                            TotalDistance>=4 & TotalDistance<6 ~ ">4 - <6 Km",
+                                            TotalDistance>=6 & TotalDistance<8 ~ ">6 - <8 Km",
+                                            TotalDistance>=8 ~ ">8 Km"), 
+                                  levels = c("<4 Km", ">4 - <6 Km", "Medium Risk", 
+                                             ">6 - <8 Km", ">8 Km")))
+
+## Plotting ......
+
+SDC <- Steps_Distance %>% 
+  ggplot(aes(steps_catg, Calories, fill = steps_catg))+
+  geom_boxplot() +
+  facet_wrap(Steps_Distance$distance_catg)+
+  labs(title = "Steps & Distance Vs Calories Burnt")+
+  coord_flip()+
+  theme_classic()
+
+SDC
+```
+
+The above graph clearly shows that the most calories burnt between ">8Km" and ">6 - <8Km" distance by taking more than 10,000 & 15,000 steps per day, but interestingly in ">6 - <8Km" plot it discovered that with less paced speed of steps and covering more distance of more than 6 km to 8 Km, one may burn more calories. Which proves the below message:
+
+**"By walking more slowly, obese individuals can burn more calories per mile and may reduce the risk of arthritis or joint injury," says researcher Ray Browning, a doctoral student in integrative physiology at the University of Colorado, Boulder, in a news release."**
+
+**Researchers found that obese people who walk at a slower pace burn more calories than when they walk at their normal pace. In addition, walking at a slower, 2-mile-per-hour pace reduces the stress on their knee joints by up to 25% compared with walking at a brisk 3-mile-per-hour pace.**
+
+
+### Analyzing Sleep Quality......
+
+
+Here, I categorized the followings:
+
+**Sleep Latency** 
+
+Five Catogories:                        
+
+1. "<10"                              
+
+2. ">=10&<=20"                    
+
+3. ">20&<30"                  
+
+4. ">=30&<60"               
+
+5. ">60"
+
+**TotalMinutesAsleep** 
+
+Four Categories:
+
+1. "<240" = "Poor"
+
+2. ">=240&<=360" = "Less"
+
+3. ">360&<=480" = "Normal" 
+
+4. ">480"  = "Over"
+
+
+**Sleep Record Category**
+
+Two Categories:
+
+1. TotalSleepRecords<2="Peaceful"
+
+2. TotalSleepRecords>=2="Disturbed"
+
+
+```{r Sleep Quality,  , echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+# Categorizing sleep latency and Sleep Quality....
+
+sleep_trends <- sleep_day %>% 
+  summarise(Id, TotalMinutesAsleep, TotalTimeInBed,
+            s_latency_catg = factor(case_when(sleep_latency < 10 ~ "<10",
+                                              sleep_latency >=10 & sleep_latency <= 20 ~ ">=10&<=20",
+                                              sleep_latency > 20 & sleep_latency < 30 ~ ">20&<30",
+                                              sleep_latency >= 30 & sleep_latency < 60 ~ ">=30&<60",
+                                              sleep_latency > 60 ~ ">60"),
+                                    levels = c("<10", ">=10&<=20", ">20&<30", ">=30&<60", ">60")),
+            sleep_catg = factor(case_when(TotalMinutesAsleep < 240 ~ "Poor",
+                                          TotalMinutesAsleep >= 240 & TotalMinutesAsleep <= 360 ~ "Less",
+                                          TotalMinutesAsleep > 360 & TotalMinutesAsleep <= 480 ~ "Normal",
+                                          TotalMinutesAsleep > 480  ~ "Over"),
+                                levels = c("Poor", "Less", "Normal", "Over")),
+            s_record_catg = factor(case_when(TotalSleepRecords < 2 ~ "Peaceful",
+                                             TotalSleepRecords >= 2 ~ "Disturbed"),
+                                   levels = c("Peaceful", "Disturbed")))
+
+
+
+# Plotting this data on graph........
+
+sleep_trends %>% 
+  ggplot(aes(s_latency_catg, fill = sleep_catg))+
+  geom_bar(position = "dodge")+
+  facet_wrap(sleep_trends$s_record_catg)+
+  labs(title = "Sleep Quality by Sleep Latency and Sleep Category", 
+       x = "Sleep Latency Category", 
+       y = "Count of Users")+
+  theme_bw()
+
+```
+
+
+As per recommendation normal sleep latency should be 10 to 20 minutes,  it may differ person to person and their schedule, age, gender etc. and can be in range of 30 to 60 minutes but less than 5 or 8 minutes and more than 1 hour is not considered good for health and indicates sleep disorder problems.
+
+The above graph clearly represents that persons who are in normal range of sleep latency having peaceful sleep.
+
+*NOTE:* **I have taken the sleep latency in general form only for analysis, However, analyzing sleep latency and sleep quality is a complex process and needs so many variables which are not available in this dataset.**
+
+
+#### User activity wise sleep quality.......
+
+Here I categorized the user activity level somehow as per CDC recommendations as follows:
+
+a. **Sedentary** i.e. VeryActiveMinutes and FairActiveMinutes are = 0
+
+b. **Vigorous** i.e VeryActiveMinutes >= 20
+
+c. **Moderate** i.e. FairActiveMinutes >= 30
+
+d. **Light** i.e. VeryActiveMinutes<20 and FairActiveMinutes<30 and sum of VeryActive and FairActive Minutes != 0
+
+
+
+```{r Activity wise Sleep Quality,  , echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+# Categorizing activity by activity time...........
+Active_catg <- daily_activity %>% 
+  summarise(Id, Date, Calories, VeryActiveMinutes, FairlyActiveMinutes, VeryActiveDistance,
+            ModeratelyActiveDistance, LightActiveDistance, SedentaryActiveDistance,
+            Act_Catg = factor(case_when(VeryActiveMinutes == 0 & FairlyActiveMinutes == 0 ~ "Sedentary",
+                                        VeryActiveMinutes>=20 ~ "Vigorous",
+                                        FairlyActiveMinutes>=30 ~ "Moderate",
+                                        VeryActiveMinutes<20 & FairlyActiveMinutes<30 & 
+                                          sum(VeryActiveMinutes,FairlyActiveMinutes)!= 0 ~ "Light"),
+                              levels = c("Vigorous", "Moderate", "Light", "Sedentary")))
+
+
+# Merging datasets to find relationship between activity type and sleep trends....
+A_S_Merged <- merge(Active_catg, sleep_trends, by = "Id", all = TRUE) %>% 
+  drop_na()
+
+A_S_Merged %>% 
+     ggplot(aes(Act_Catg, fill = sleep_catg))+
+     geom_histogram(stat = "count", position = "dodge")+
+     labs(title = "Activity Category Wise Sleep Category", 
+              x = "Activity Category", 
+              y = "Count of Users")+
+  theme_bw()
+```
+
+
+The above graph clearly shows the followings:
+
+- Highest number of normal sleepers in Vigorous activity 
+
+- Highest number of over sleepers and poor sleepers in sedentary category. 
+
+- In contrary it also shows highest number of less sleepers in vigorous active category which represent that many vigorous active persons tends to sleep less and remain active most of the time.
+
+## ACT & RECOMMENDATIONS:
+
+#### Conclusions:
+ 
+1. There is a positive relation between activity category , activity time and calories burnt, the more intense an activity, with longer time, more calories it burns.
+
+2. There is a positive relation between activity distance and calories burnt, the more distance with more intense activity, burns more calories.
+
+3. There is a positive relation between number of steps and calories burnt, the more steps burns more calories. But it is also discovered that walking at a slower pace with covering longer distance can burn more calories than normal pace.
+
+4. There is a positive relation between activity type and sleep quality, the vigorous active persons tends to have normal sleep than less active person.
+
+5. There is negative relation between sleep latency and sleep quality, if sleep latency is increases sleep quality will decrease.
+
+
+#### Technical Recommendations:
+
+**As the Bellabeat is especially working for women, its app should have facility to track Menstruation period and provide alerts to user before due date and any inconsistency if found. **
+
+1. Bellabeat app should timely alert user on crossing threshold limit of sedentary minutes, as very high percentage of users were found in sedentary category of Very High Risk.  if person stays sedentary for more that 11 hours, it may cause serious health issues.
+
+2. Bellabeat should also collect the age, gender, location, height, weight, any persisting deceases, etc to better recommend about their goals and diets as per conditions.
+
+3. Bellabeat app should also encourage users to fill what they are eating in breakfast, lunch and dinner to better track and suggests regarding their health and should also provide diet and exercise plan as per conditions.
+
+4. Should encourage users for 10,000 steps per day at least. 
+
+5. If user is obese than should encourage to walk at slow pace by covering longer distance.
+
+6. Should also alert users if they are having more sleep latency than normal.
+
+
+#### Business Promotional Recommendations:
+
+1. Should collaborate with local Gyms/Fitness Centers, Health Check-up Labs, and other health related products companies to provide good discounts to Bellabeat users.
+
+2. Should offer discount on Bellabeat products and membership to users on achieving goals defined by Bellabeat.
+
+3. Should campaign free health check-up by recognized health lab once in a year to the Bellabeat members.
+
+4. Should arrange a community meet of Bellabeat members once in a year and also connect them with social media to share their fitness achievements to encourage others.
+
+5. Bellabeat should provide free online fitness advise with doctors and expert fitness instructors to their users.
+
+## Thanks for giving me the chance to analyze this amazing case study.
+
+
+
+
